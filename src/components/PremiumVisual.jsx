@@ -11,13 +11,13 @@ export default function PremiumVisual() {
         </p>
         <div className="pv-grid rv" style={{ transitionDelay: '.2s' }}>
           <div className="pv-ph">
-            <img src="/assets/placeholder1.png" alt="FitNyx Experience 1" className="pv-img" />
+            <img src={`${import.meta.env.BASE_URL}assets/placeholder1.png`} alt="FitNyx Experience 1" className="pv-img" />
           </div>
           <div className="pv-ph">
-            <img src="/assets/placeholder2.png" alt="FitNyx Experience 2" className="pv-img" />
+            <img src={`${import.meta.env.BASE_URL}assets/placeholder2.png`} alt="FitNyx Experience 2" className="pv-img" />
           </div>
           <div className="pv-ph">
-            <img src="/assets/placeholder3.png" alt="FitNyx Experience 3" className="pv-img" />
+            <img src={`${import.meta.env.BASE_URL}assets/placeholder3.png`} alt="FitNyx Experience 3" className="pv-img" />
           </div>
         </div>
       </div>
