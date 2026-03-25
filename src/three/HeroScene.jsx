@@ -58,7 +58,7 @@ export default function HeroScene() {
       return 2.2
     }
 
-    loader.load('metal_dumbell.glb', (gltf) => {
+    loader.load(`${import.meta.env.BASE_URL}metal_dumbell.glb`, (gltf) => {
       phone = gltf.scene
       phone.scale.setScalar(getScale())
       phone.position.set(getXPos(), -0.2, 0)

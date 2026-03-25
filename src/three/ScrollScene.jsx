@@ -22,7 +22,7 @@ export default function ScrollScene() {
       ctx.fillRect(0, 0, 1170, 2532)
 
       const img = new Image()
-      img.src = `assets/iphoneImage${i}.png`
+      img.src = `${import.meta.env.BASE_URL}assets/iphoneImage${i}.png`
       img.onload = () => {
         c.width = 1170
         c.height = 2532
@@ -165,7 +165,7 @@ export default function ScrollScene() {
     var loader2 = new THREE.GLTFLoader()
     var lastScreen = -1
 
-    loader2.load('3d-models/iphone 17_4.glb', function (gltf) {
+    loader2.load(`${import.meta.env.BASE_URL}3d-models/iphone 17_4.glb`, function (gltf) {
       phone = gltf.scene
       phone.scale.setScalar(getPhoneScale())
       phone.position.set(0, 0, 0)
