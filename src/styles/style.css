@@ -128,7 +128,12 @@ nav.sc{background:rgba(5,5,8,.82);backdrop-filter:blur(24px);-webkit-backdrop-fi
 /* ═══════════════════════════════════
    PHONE SCROLL SECTIONS
 ═══════════════════════════════════ */
-#phone-scroll{position:relative}
+#phone-scroll{
+  position:relative;
+  --ps-copy-height:360px;
+  --ps-mobile-slot:clamp(280px,40vh,360px);
+  --ps-mobile-gap:clamp(32px,6vh,52px);
+}
 
 /* Sticky canvas wrapper */
 #phone-sticky{
@@ -151,9 +156,10 @@ nav.sc{background:rgba(5,5,8,.82);backdrop-filter:blur(24px);-webkit-backdrop-fi
   z-index:20;
   padding:0 56px;
 }
-.phone-section:nth-child(odd) .ps-content{margin-left:auto;margin-right:48%;}
-.phone-section:nth-child(even) .ps-content{margin-right:auto;margin-left:48%;}
+.phone-section--top .ps-content{margin-right:auto;margin-left:48%;}
+.phone-section--bottom .ps-content{margin-left:auto;margin-right:48%;}
 .ps-content{max-width:440px;position:relative}
+.ps-copy-shell,.ps-copy-measure{width:100%}
 
 /* Section label & typography */
 .slbl{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--g);margin-bottom:14px;display:inline-block;position:relative}
@@ -468,12 +474,12 @@ footer{background:var(--su);border-top:1px solid var(--bd);padding:56px 56px 34p
   #phone-sticky{display:block!important}
   .mob-screen-img{display:none!important}
   .phone-section{height:100vh;height:100dvh}
-  .phone-section:nth-child(odd) .ps-content,
-  .phone-section:nth-child(even) .ps-content{
+  .phone-section--top .ps-content,
+  .phone-section--bottom .ps-content{
     margin:0;max-width:380px;
   }
-  .phone-section:nth-child(odd) .ps-content{margin-right:auto;margin-left:5%}
-  .phone-section:nth-child(even) .ps-content{margin-left:auto;margin-right:5%}
+  .phone-section--top .ps-content{margin-left:auto;margin-right:5%}
+  .phone-section--bottom .ps-content{margin-right:auto;margin-left:5%}
 }
 
 /* ═══════════════════════════════════════════
@@ -512,30 +518,30 @@ footer{background:var(--su);border-top:1px solid var(--bd);padding:56px 56px 34p
   body{cursor:auto}
   #cr,#cr-r{display:none}
 
-  /* Phone scroll — mobile 3D phone! */
-  #phone-sticky{display:block!important}
+  /* Phone scroll — text-only on mobile */
+  #phone-sticky{display:none!important}
   .mob-screen-img{display:none!important}
   .phone-section {
-    height: 100vh;
-    height: 100dvh;
+    height: auto;
+    min-height: 0;
     padding: 0 20px;
-    display: flex;
-    flex-direction: column;
+    display: block;
   }
-  .phone-section:nth-child(odd) .ps-content {
+  .phone-section + .phone-section {
+    margin-top: 56px;
+  }
+  .phone-section--top .ps-content,
+  .phone-section--bottom .ps-content {
     margin: 0 auto;
     max-width: 100%;
+    width: min(100%,34rem);
     text-align: center;
-    margin-bottom: auto;
-    padding-top: 10vh;
+    min-height: 0;
+    display: block;
   }
-  .phone-section:nth-child(even) .ps-content {
-    margin: 0 auto;
-    max-width: 100%;
-    text-align: center;
-    margin-top: auto;
-    padding-bottom: 12vh;
-    padding-top: 0;
+  .phone-section--top .ps-copy-shell,
+  .phone-section--bottom .ps-copy-shell {
+    display: block;
   }
   .bul{align-items:center}
 

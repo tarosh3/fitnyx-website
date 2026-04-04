@@ -1,7 +1,10 @@
 import ParticleCanvas from './ParticleCanvas'
 import HeroScene from '../three/HeroScene'
+import useIsMobileViewport from '../hooks/useIsMobileViewport'
 
 export default function Hero({ onPreReg }) {
+  const isMobileViewport = useIsMobileViewport()
+
   const handleScroll = (e) => {
     e.preventDefault()
     document.getElementById('snapshot-s')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -10,7 +13,7 @@ export default function Hero({ onPreReg }) {
   return (
     <section id="hero">
       <ParticleCanvas />
-      <HeroScene />
+      {!isMobileViewport && <HeroScene />}
       <div className="hero-left">
         <div className="hero-tag">
           <span className="htdot"></span>AI-Powered Fitness Intelligence

@@ -17,6 +17,9 @@ export default function PricingSection({ onPreReg }) {
             <div className="ppl">Starter</div>
             <div className="pam">Free</div>
             <div className="ppe">Forever</div>
+            <div className="ppe" style={{ marginTop: 8 }}>
+              First few users who pre-register get Elite features free for a limited time.
+            </div>
             <div className="pdiv"></div>
             <ul className="pfl">
               <li className="pf">Basic workout tracking</li>
@@ -25,14 +28,14 @@ export default function PricingSection({ onPreReg }) {
               <li className="pf dm">7-day history only</li>
               <li className="pf dm">No custom plans</li>
             </ul>
-            <button onClick={onPreReg} className="bpl bo">Notify Me at Launch</button>
+            <button onClick={onPreReg} className="bpl bso">Pre-Register</button>
           </div>
 
           {/* Pro */}
           <div className="pc fe rv" style={{ transitionDelay: '.1s' }}>
             <div className="ptop">Most Popular</div>
             <div className="ppl">Pro</div>
-            <div className="pam"><sup>₹</sup>299</div>
+            <div className="pam"><sup>₹</sup>129</div>
             <div className="ppe">per month · 7-day free trial</div>
             <div className="pdiv"></div>
             <ul className="pfl">
@@ -44,13 +47,13 @@ export default function PricingSection({ onPreReg }) {
               <li className="pf">Offline mode + cloud sync</li>
               <li className="pf">Unlimited history</li>
             </ul>
-            <button onClick={onPreReg} className="bpl bso">Pre-Register for Pro</button>
+            <button onClick={onPreReg} className="bpl bo">Notify Me at Launch</button>
           </div>
 
           {/* Elite */}
           <div className="pc rv" style={{ transitionDelay: '.2s' }}>
             <div className="ppl">Elite</div>
-            <div className="pam"><sup>₹</sup>599</div>
+            <div className="pam"><sup>₹</sup>229</div>
             <div className="ppe">per month</div>
             <div className="pdiv"></div>
             <ul className="pfl">

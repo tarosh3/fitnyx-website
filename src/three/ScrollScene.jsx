@@ -205,23 +205,31 @@ export default function ScrollScene() {
 
     var curX = 0, curY = 0, curRY = 0, curRX = 0, curRZ = 0
     var clk2 = 0
+    var mobileAnchor = null
 
     let scrollElTop = 0
     let scrollElHeight = 0
+    let scrollResizeObserver = null
 
     function updateLayout() {
       const scrollEl = document.getElementById('phone-scroll')
       if (scrollEl) {
         const rect = scrollEl.getBoundingClientRect()
-        // We need the absolute top position relative to the document
         scrollElTop = rect.top + window.scrollY
         scrollElHeight = scrollEl.offsetHeight
       }
     }
     updateLayout()
 
+    const scrollEl = document.getElementById('phone-scroll')
+    if (scrollEl && typeof ResizeObserver !== 'undefined') {
+      scrollResizeObserver = new ResizeObserver(updateLayout)
+      scrollResizeObserver.observe(scrollEl)
+    }
+    window.addEventListener('phoneScrollLayoutChange', updateLayout)
+
     function getScrollState() {
-      if (scrollElHeight === 0) return { prog: 0, sectionIdx: 0, steppedRaw: 0 }
+      if (scrollElHeight <= innerHeight) return { prog: 0, sectionIdx: -1, steppedRaw: -1 }
       const scrolled = clamp(window.scrollY - scrollElTop, 0, scrollElHeight - innerHeight)
       const prog = scrolled / (scrollElHeight - innerHeight)
       const raw = prog * 4 - 1
@@ -241,6 +249,45 @@ export default function ScrollScene() {
       return { prog, sectionIdx, steppedRaw }
     }
 
+    function getMobileTargetY(sectionIdx) {
+      const sections = document.querySelectorAll('#phone-scroll .phone-section')
+      if (!sections.length) return 0
+
+      const safeIdx = clamp(sectionIdx < 0 ? 0 : sectionIdx, 0, sections.length - 1)
+      const activeSection = sections[safeIdx]
+      const content = activeSection.querySelector('.ps-content')
+      const fallbackAnchor = activeSection.dataset.copyPlacement === 'top' ? 'bottom' : 'top'
+
+      if (!content) {
+        mobileAnchor = mobileAnchor || fallbackAnchor
+        return mobileAnchor === 'top' ? 1.1 : -1.1
+      }
+
+      const nav = document.querySelector('nav')
+      const safeTop = (nav ? nav.getBoundingClientRect().bottom : 0) + 18
+      const safeBottom = innerHeight - 28
+      const rect = content.getBoundingClientRect()
+      const topSpace = clamp(rect.top - safeTop, 0, innerHeight)
+      const bottomSpace = clamp(safeBottom - rect.bottom, 0, innerHeight)
+      const preferredAnchor = topSpace >= bottomSpace ? 'top' : 'bottom'
+
+      if (!mobileAnchor) mobileAnchor = fallbackAnchor
+
+      const currentSpace = mobileAnchor === 'top' ? topSpace : bottomSpace
+      const preferredSpace = preferredAnchor === 'top' ? topSpace : bottomSpace
+      const minClearance = Math.min(innerHeight * 0.34, 300)
+
+      if (preferredAnchor !== mobileAnchor && (preferredSpace > currentSpace + 32 || currentSpace < minClearance * 0.8)) {
+        mobileAnchor = preferredAnchor
+      }
+
+      const anchorSpace = mobileAnchor === 'top' ? topSpace : bottomSpace
+      const breathingRoom = clamp((anchorSpace - minClearance * 0.75) / (innerHeight * 0.2), 0, 1)
+      const offset = THREE.MathUtils.lerp(1.05, 1.78, breathingRoom)
+
+      return mobileAnchor === 'top' ? offset : -offset
+    }
+
     var rafId
     function animate() {
       rafId = requestAnimationFrame(animate)
@@ -258,29 +305,13 @@ export default function ScrollScene() {
       var targetY = yOff
       var targetRY, targetRX, targetRZ
       if (isMobile) {
-        // OFFSET SNAP LOGIC:
-        // By snapping at .25 or .75, we cross the middle when text is furthest from center.
-        var raw = state.prog * 4 - 1
-        var f = raw - Math.floor(raw)
-        var snapIdx = (f < 0.25) ? Math.floor(raw) : Math.ceil(raw)
-        
-        // S1(snap 0) -> Text TOP, Phone BOTTOM (-1.8)
-        // S2(snap 1) -> Text BOTTOM, Phone TOP (1.8)
-        targetY = (snapIdx % 2 === 0) ? -1.8 : 1.8
-        
-        targetRY = steppedRaw * -Math.PI * 2 + (targetY * -0.1)
-        targetRX = 0.1 + Math.sin(steppedRaw * Math.PI) * 0.2
+        targetX = 0
+        targetY = getMobileTargetY(sectionIdx)
+        targetRY = steppedRaw * -Math.PI * 2 + (targetY * -0.08)
+        targetRX = 0.08 + Math.sin(steppedRaw * Math.PI) * 0.18
         targetRZ = 0
       } else {
         targetY += Math.sin(steppedRaw * Math.PI) * -0.5
-      }
-
-      var targetRY, targetRX, targetRZ
-      if (isMobile) {
-        targetRY = steppedRaw * -Math.PI * 2 + (targetY * -0.1)
-        targetRX = 0.1 + Math.sin(steppedRaw * Math.PI) * 0.2
-        targetRZ = 0
-      } else {
         targetRY = steppedRaw * -Math.PI * 2 + (targetX * -0.06)
         targetRX = 0.08 + Math.sin(steppedRaw * Math.PI) * 0.15
         targetRZ = -targetX * 0.015
@@ -288,11 +319,10 @@ export default function ScrollScene() {
 
       var damp = isMobile ? 0.09 : 0.07
       curX += (targetX - curX) * damp
-      // Higher damp for Y on mobile for "instant" snap
-      var yDamp = isMobile ? 0.25 : damp
+      var yDamp = isMobile ? 0.32 : damp
       curY += (targetY - curY) * yDamp
-      curRY += (targetRY - curRY) * (isMobile ? 0.15 : damp)
-      curRX += (targetRX - curRX) * (isMobile ? 0.15 : damp)
+      curRY += (targetRY - curRY) * (isMobile ? 0.18 : damp)
+      curRX += (targetRX - curRX) * (isMobile ? 0.18 : damp)
       curRZ += (targetRZ - curRZ) * damp
 
       if (phone) {
@@ -326,6 +356,8 @@ export default function ScrollScene() {
 
     return () => {
       cancelAnimationFrame(rafId)
+      scrollResizeObserver?.disconnect()
+      window.removeEventListener('phoneScrollLayoutChange', updateLayout)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('splashRendered', onSplash)
       renderer.dispose()

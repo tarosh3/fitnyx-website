@@ -1,4 +1,6 @@
+import { useEffect, useRef } from 'react'
 import ScrollScene from '../three/ScrollScene'
+import useIsMobileViewport from '../hooks/useIsMobileViewport'
 
 const sections = [
   {
@@ -56,27 +58,95 @@ const sections = [
 ]
 
 export default function PhoneScroll() {
+  const rootRef = useRef(null)
+  const isMobileViewport = useIsMobileViewport()
+
+  useEffect(() => {
+    const rootEl = rootRef.current
+    if (!rootEl) return
+
+    let frameId = 0
+
+    const syncMobileSpacing = () => {
+      if (window.innerWidth > 768) {
+        rootEl.style.removeProperty('--ps-copy-height')
+        window.dispatchEvent(new Event('phoneScrollLayoutChange'))
+        return
+      }
+
+      const copyBlocks = Array.from(rootEl.querySelectorAll('.ps-copy-measure'))
+      if (!copyBlocks.length) return
+
+      const maxCopyHeight = copyBlocks.reduce((tallest, block) => {
+        return Math.max(tallest, Math.ceil(block.getBoundingClientRect().height))
+      }, 0)
+
+      if (maxCopyHeight > 0) {
+        rootEl.style.setProperty('--ps-copy-height', `${maxCopyHeight}px`)
+        window.dispatchEvent(new Event('phoneScrollLayoutChange'))
+      }
+    }
+
+    const requestSync = () => {
+      cancelAnimationFrame(frameId)
+      frameId = requestAnimationFrame(syncMobileSpacing)
+    }
+
+    const resizeObserver = typeof ResizeObserver === 'undefined'
+      ? null
+      : new ResizeObserver(requestSync)
+
+    rootEl.querySelectorAll('.ps-copy-measure').forEach((block) => resizeObserver?.observe(block))
+
+    requestSync()
+    window.addEventListener('resize', requestSync)
+    window.addEventListener('orientationchange', requestSync)
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(requestSync).catch(() => {})
+    }
+
+    return () => {
+      cancelAnimationFrame(frameId)
+      resizeObserver?.disconnect()
+      window.removeEventListener('resize', requestSync)
+      window.removeEventListener('orientationchange', requestSync)
+    }
+  }, [])
+
   return (
-    <div id="phone-scroll">
-      <div id="phone-sticky">
-        <ScrollScene />
-      </div>
-      {sections.map((s) => (
-        <div className="phone-section" id={s.id} key={s.id}>
-          <div className="ps-content">
-            <div className={s.revealClass}>
-              <span className="slbl">{s.label}</span>
-              <h2 className="stit">{s.title}</h2>
-              <p className="sbod">{s.body}</p>
-              <ul className="bul">
-                {s.bullets.map((b, i) => (
-                  <li key={i}>{b}</li>
-                ))}
-              </ul>
+    <div id="phone-scroll" ref={rootRef}>
+      {!isMobileViewport && (
+        <div id="phone-sticky">
+          <ScrollScene />
+        </div>
+      )}
+      {sections.map((s, index) => {
+        const copyPlacement = index % 2 === 0 ? 'top' : 'bottom'
+
+        return (
+          <div
+            className={`phone-section phone-section--${copyPlacement}`}
+            data-copy-placement={copyPlacement}
+            id={s.id}
+            key={s.id}
+          >
+            <div className="ps-content">
+              <div className={`${s.revealClass} ps-copy-shell`}>
+                <div className="ps-copy-measure">
+                  <span className="slbl">{s.label}</span>
+                  <h2 className="stit">{s.title}</h2>
+                  <p className="sbod">{s.body}</p>
+                  <ul className="bul">
+                    {s.bullets.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
