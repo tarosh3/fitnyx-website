@@ -4,7 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FitNyx — Train with a plan. Eat with purpose.</title>
+  <meta name="description" content="AI-powered fitness app — context-aware coach, structured workout plans, nutrition that supports your goal, and progress tracking that actually makes sense.">
+  <meta property="og:title" content="FitNyx — Train with a plan. Eat with purpose.">
+  <meta property="og:description" content="AI-powered fitness app — context-aware coach, structured workout plans, nutrition that supports your goal, and progress tracking that actually makes sense.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fitnyx.in">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="/favicon.png?v=2">
+  <script>
+    // GitHub Pages SPA redirect decoder — paired with 404.html.
+    // If ?p=/blog/foo is present (set by 404.html), rewrites the URL so the router sees the original path.
+    (function () {
+      var l = window.location;
+      if (l.search && l.search.indexOf('?p=/') === 0) {
+        var decoded = l.search.slice(3).split('&').map(function (s) { return s.replace(/~and~/g, '&'); });
+        var path = decoded[0];
+        var query = decoded[1] ? '?' + decoded[1].replace(/^q=/, '') : '';
+        history.replaceState(null, '', l.pathname.replace(/\/$/, '') + path + query + l.hash);
+      }
+    })();
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <!-- Three.js r128 from CDN — identical to original non-React site -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

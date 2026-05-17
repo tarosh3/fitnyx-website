@@ -11,6 +11,7 @@ import ReviewsSection from '../components/ReviewsSection'
 import PricingSection from '../components/PricingSection'
 import FAQSection from '../components/FAQSection'
 import PremiumVisual from '../components/PremiumVisual'
+import BlogPreview from '../sections/BlogPreview'
 import FinalCTA from '../components/FinalCTA'
 
 export default function Home({ openPreReg }) {
@@ -92,6 +93,7 @@ export default function Home({ openPreReg }) {
       <PricingSection onPreReg={openPreReg} />
       <FAQSection />
       <PremiumVisual />
+      <BlogPreview />
       <FinalCTA onPreReg={openPreReg} />
     </>
   )

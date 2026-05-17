@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { getLoadingManager } from './loadingManager'
 
 export default function ScrollScene() {
   const canvasRef = useRef(null)
@@ -162,7 +163,8 @@ export default function ScrollScene() {
     scene.add(floor)
 
     var phone = null, currentScreen = 0
-    var loader2 = new THREE.GLTFLoader()
+    var lm = getLoadingManager()
+    var loader2 = lm ? new THREE.GLTFLoader(lm) : new THREE.GLTFLoader()
     var lastScreen = -1
 
     loader2.load(`${import.meta.env.BASE_URL}3d-models/iphone 17_4.glb`, function (gltf) {

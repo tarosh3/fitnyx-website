@@ -14,6 +14,11 @@ export default function Hero({ onPreReg }) {
     <section id="hero">
       <ParticleCanvas />
       {!isMobileViewport && <HeroScene />}
+      {!isMobileViewport && (
+        <div className="hero-floats" aria-hidden="true">
+          <div className="hero-orbit" />
+        </div>
+      )}
       <div className="hero-left">
         <div className="hero-tag">
           <span className="htdot"></span>AI-Powered Fitness Intelligence

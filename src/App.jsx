@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import Navbar from './components/Navbar'
 import PreRegModal from './components/PreRegModal'
 import Footer from './components/Footer'
+import Loader from './components/Loader'
 import Home from './pages/Home'
+import Blog from './pages/Blog'
+import BlogPost from './pages/BlogPost'
 import PolicyPage from './pages/PolicyPage'
 
 export default function App() {
@@ -19,12 +23,15 @@ export default function App() {
   }, [location.pathname])
 
   return (
-    <>
+    <HelmetProvider>
+      <Loader />
       <Navbar onPreReg={openPreReg} />
       <PreRegModal isOpen={modalOpen} onClose={closePreReg} />
-      
+
       <Routes>
         <Route path="/" element={<Home openPreReg={openPreReg} />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         
         <Route path="/privacy-policy" element={
           <PolicyPage title="Privacy Policy" lastUpdated="February 16, 2026">
@@ -98,6 +105,6 @@ export default function App() {
       </Routes>
 
       <Footer />
-    </>
+    </HelmetProvider>
   )
 }

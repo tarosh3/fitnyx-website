@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { getLoadingManager } from './loadingManager'
 
 export default function HeroScene() {
   const canvasRef = useRef(null)
@@ -44,24 +45,29 @@ export default function HeroScene() {
     scene.add(top)
 
     let phone = null
-    const loader = new THREE.GLTFLoader()
+    const lm = getLoadingManager()
+    const loader = lm ? new THREE.GLTFLoader(lm) : new THREE.GLTFLoader()
 
     function getScale() {
-      if (innerWidth <= 480) return 0.2
-      if (innerWidth <= 768) return 0.25
-      if (innerWidth <= 1024) return 0.3
+      if (window.innerWidth <= 480) return 0.22
+      if (window.innerWidth <= 768) return 0.28
+      if (window.innerWidth <= 1024) return 0.32
       return 0.35
     }
     function getXPos() {
-      if (innerWidth <= 768) return 0.8
-      if (innerWidth <= 1024) return 1.5
+      if (window.innerWidth <= 768) return 0.2 // More centered on mobile
+      if (window.innerWidth <= 1024) return 1.2
       return 2.2
+    }
+    function getYPos() {
+      if (window.innerWidth <= 768) return -0.4 // Lower on mobile to sit behind text
+      return -0.2
     }
 
     loader.load(`${import.meta.env.BASE_URL}metal_dumbell.glb`, (gltf) => {
       phone = gltf.scene
       phone.scale.setScalar(getScale())
-      phone.position.set(getXPos(), -0.2, 0)
+      phone.position.set(getXPos(), getYPos(), 0)
       phone.rotation.set(0.05, -0.3, 0.05)
       phone.traverse((c) => {
         if (c.isMesh) { c.castShadow = true; c.receiveShadow = true }
@@ -86,10 +92,11 @@ export default function HeroScene() {
         const curScale = phone.scale.x
         phone.scale.setScalar(curScale + (targetScale - curScale) * 0.03)
         const targetXPos = getXPos()
+        const targetYPos = getYPos()
         phone.position.x += (targetXPos - phone.position.x) * 0.03
         phone.rotation.y = -0.3 + Math.sin(clk * 0.4) * 0.04 + (mx - 0.5) * (2.4 * Math.PI)
         phone.rotation.x = 0.05 + (my - 0.5) * 1.0
-        phone.position.y = -0.2 + Math.sin(clk * 0.5) * 0.06
+        phone.position.y = targetYPos + Math.sin(clk * 0.5) * 0.06
       }
 
       rim.intensity = 3.5 + 1.5 * Math.sin(clk * 1.2)

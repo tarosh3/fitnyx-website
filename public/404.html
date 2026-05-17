@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FitNyx</title>
+  <script>
+    // GitHub Pages SPA redirect — based on rafgraph/spa-github-pages pattern.
+    // Captures the requested deep path and redirects to index.html with the path encoded.
+    // index.html decodes and replaces history so the client router can render the right route.
+    (function () {
+      var segmentCount = 1; // /fitnyx-website is the base path segment
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?p=/' +
+        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    })();
+  </script>
+</head>
+<body></body>
+</html>

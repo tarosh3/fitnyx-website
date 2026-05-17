@@ -50,18 +50,20 @@ export default function Navbar({ onPreReg }) {
           <li><a href="#goals-s" onClick={(e) => handleNav(e, '#goals-s')}>Goals</a></li>
           <li><a href="#price-s" onClick={(e) => handleNav(e, '#price-s')}>Pricing</a></li>
           <li><a href="#faq-s" onClick={(e) => handleNav(e, '#faq-s')}>FAQ</a></li>
+          <li><Link to="/blog" onClick={closeMenu}>Blog</Link></li>
         </ul>
         <button className="nbtn" onClick={onPreReg}>Pre-Register</button>
-        <button className={`ham${menuOpen ? ' active' : ''}`} aria-label="Toggle menu" onClick={toggleMenu}>
+        <button className={`ham${menuOpen ? ' active' : ''}`} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={toggleMenu}>
           <span></span><span></span><span></span>
         </button>
       </nav>
 
-      <div className={`mob-menu${menuOpen ? ' open' : ''}`}>
+      <div className={`mob-menu${menuOpen ? ' open' : ''}`} role="dialog" aria-modal="true" aria-label="Mobile navigation">
         <a href="#phone-scroll" onClick={(e) => handleNav(e, '#phone-scroll')}>Features</a>
         <a href="#goals-s" onClick={(e) => handleNav(e, '#goals-s')}>Goals</a>
         <a href="#price-s" onClick={(e) => handleNav(e, '#price-s')}>Pricing</a>
         <a href="#faq-s" onClick={(e) => handleNav(e, '#faq-s')}>FAQ</a>
+        <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <button className="nbtn" style={{ marginTop: '10px' }} onClick={() => { closeMenu(); onPreReg() }}>Pre-Register</button>
       </div>
     </>
