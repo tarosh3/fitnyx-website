@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Navbar from './components/Navbar'
 import PreRegModal from './components/PreRegModal'
 import Footer from './components/Footer'
 import Loader from './components/Loader'
-import Home from './pages/Home'
-import Blog from './pages/Blog'
-import BlogPost from './pages/BlogPost'
 import PolicyPage from './pages/PolicyPage'
+
+const Home = lazy(() => import('./pages/Home'))
+const Blog = lazy(() => import('./pages/Blog'))
+const BlogPost = lazy(() => import('./pages/BlogPost'))
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -28,6 +29,7 @@ export default function App() {
       <Navbar onPreReg={openPreReg} />
       <PreRegModal isOpen={modalOpen} onClose={closePreReg} />
 
+      <Suspense fallback={null}>
       <Routes>
         <Route path="/" element={<Home openPreReg={openPreReg} />} />
         <Route path="/blog" element={<Blog />} />
@@ -103,6 +105,7 @@ export default function App() {
           </PolicyPage>
         } />
       </Routes>
+      </Suspense>
 
       <Footer />
     </HelmetProvider>

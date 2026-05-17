@@ -1751,11 +1751,7 @@ footer{background:var(--su);border-top:1px solid var(--bd);padding:56px 56px 34p
 
 /* Background — aurora gradients with slow drift */
 .app-loader-bg{position:absolute;inset:0;overflow:hidden}
-.app-loader-aurora{
-  position:absolute;border-radius:50%;
-  filter:blur(80px);opacity:.55;
-  will-change:transform;
-}
+.app-loader-aurora{display:none}
 .app-loader-aurora--1{
   width:60vmax;height:60vmax;
   top:-20vmax;left:-15vmax;
@@ -1855,22 +1851,15 @@ footer{background:var(--su);border-top:1px solid var(--bd);padding:56px 56px 34p
 /* Mark */
 .app-loader-mark{
   position:relative;z-index:2;
-  width:72px;height:72px;border-radius:18px;
-  background:linear-gradient(135deg,#61c894 0%,#3DFFD4 100%);
-  color:#050507;
-  font-family:var(--fh);font-weight:800;font-size:36px;line-height:1;letter-spacing:-1px;
+  width:200px;height:200px;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.08) inset,
-    0 20px 60px -18px rgba(97,200,148,.7),
-    0 0 50px rgba(97,200,148,.25);
-  animation:loaderBreathe 3.2s cubic-bezier(.4,0,.2,1) infinite;
-  will-change:transform;
 }
-.app-loader-mark span{display:block;transform:translateY(-1px)}
-@keyframes loaderBreathe{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.04)}
+.app-loader-svg{
+  width:100%;height:100%;display:block;
+  filter:drop-shadow(0 0 18px rgba(96,201,148,.18));
+}
+@media (max-width:520px){
+  .app-loader-mark{width:150px;height:150px}
 }
 .app-loader--done .app-loader-mark{
   animation:loaderMarkPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
@@ -1931,7 +1920,7 @@ footer{background:var(--su);border-top:1px solid var(--bd);padding:56px 56px 34p
 @media(max-width:480px){
   .app-loader-orbit{width:128px;height:128px}
   .app-loader-ring{width:128px;height:128px}
-  .app-loader-mark{width:58px;height:58px;font-size:28px;border-radius:14px}
+  .app-loader-mark{width:76px;height:76px}
   .app-loader-wordmark{font-size:18px}
   .app-loader-status{min-width:0;font-size:10px}
   .app-loader-stage{gap:32px}
