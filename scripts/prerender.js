@@ -13,7 +13,30 @@ import { resolve, dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { createServer } from 'node:http'
 import sirv from 'sirv'
-import puppeteer from 'puppeteer'
+
+// Pick the right puppeteer + chromium combo for the host:
+// - Vercel / Lambda: puppeteer-core + @sparticuz/chromium (Linux x64 binary with bundled libs)
+// - Local dev: full puppeteer (ships its own chromium with native libs)
+const IS_SERVERLESS = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.AWS_REGION)
+async function launchBrowser() {
+  if (IS_SERVERLESS) {
+    const [{ default: chromium }, { default: pc }] = await Promise.all([
+      import('@sparticuz/chromium'),
+      import('puppeteer-core'),
+    ])
+    return pc.launch({
+      args: [...chromium.args, '--disable-dev-shm-usage'],
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+    })
+  }
+  const { default: pup } = await import('puppeteer')
+  return pup.launch({
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+  })
+}
 
 if (process.env.PRERENDER === 'false') {
   console.log('[prerender] PRERENDER=false, skipping')
@@ -206,10 +229,7 @@ async function main() {
   const templateHtml = readFileSync(join(distDir, 'index.html'), 'utf8')
 
   const server = await startServer(templateHtml)
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-  })
+  const browser = await launchBrowser()
 
   const captured = []
   try {
