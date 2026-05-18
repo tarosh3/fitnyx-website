@@ -1,10 +1,21 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllPosts } from '../data/posts'
+import { blogPosts as fallback } from '../data/blogPosts'
 
 export default function BlogPreview() {
   const [posts, setPosts] = useState([])
-  useEffect(() => { getAllPosts().then((p) => setPosts(p.slice(0, 3))) }, [])
+  useEffect(() => {
+    getAllPosts().then((p) => {
+      const seen = new Set()
+      const merged = [...p, ...fallback].filter((post) => {
+        if (seen.has(post.slug)) return false
+        seen.add(post.slug)
+        return true
+      })
+      setPosts(merged.slice(0, 3))
+    })
+  }, [])
   if (!posts.length) return null
 
   return (
@@ -25,7 +36,7 @@ export default function BlogPreview() {
 
         <div className="blog-preview-grid">
           {posts.map((p) => (
-            <Link to={`/blog/${p.slug}`} key={p.slug} className="rv blog-card">
+            <Link to={`/blog/${p.slug}`} key={p.slug} className="blog-card">
               <div className="blog-card-meta">
                 {p.tags.slice(0, 1).map((t) => (
                   <span className="blog-tag" key={t}>{t}</span>

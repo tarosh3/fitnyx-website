@@ -1,6 +1,17 @@
 export default function WhySection() {
   return (
     <div className="std-section" id="why-exists-s" style={{ background: 'rgba(13,13,21,.4)' }}>
+      <video
+        className="why-bg-video"
+        src="/videos/problem-bg.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
+      <div className="why-bg-overlay" aria-hidden="true" />
       <div className="si-inner why-flex">
         <div className="why-l rv">
           <span className="slbl">The Problem</span>
