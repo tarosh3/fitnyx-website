@@ -14,5 +14,6 @@ Crawl-delay: 10
 Disallow: /assets/*.map$
 Disallow: /3d-models/
 Disallow: /videos/
+Disallow: /_next/
 
 Sitemap: https://fitnyx.in/sitemap.xml
