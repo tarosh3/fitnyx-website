@@ -18,6 +18,10 @@ export default function BlogPost() {
     return () => { cancelled = true }
   }, [slug])
 
+  useEffect(() => {
+    if (post && post.title) document.title = `${post.title} · FitNyx Insights`
+  }, [post])
+
   if (post === undefined) return <div className="blog-post"><div className="blog-post-inner"><p className="muted">Loading...</p></div></div>
   if (post === null) return <Navigate to="/blog" replace />
 

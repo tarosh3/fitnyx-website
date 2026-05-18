@@ -12,6 +12,10 @@ export default function PolicyPage({ title, lastUpdated, children }) {
     window.scrollTo(0, 0)
   }, [])
 
+  useEffect(() => {
+    document.title = `${title} · FitNyx`
+  }, [title])
+
   return (
     <>
       <Helmet>

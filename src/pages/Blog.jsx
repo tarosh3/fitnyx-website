@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getAllPosts } from '../data/posts'
 
+const PAGE_TITLE = 'Fitness Insights & Training Science · FitNyx Blog'
+
 export default function Blog() {
   const [posts, setPosts] = useState([])
   useEffect(() => { getAllPosts().then(setPosts) }, [])
+  useEffect(() => { document.title = PAGE_TITLE }, [])
   const siteUrl = 'https://fitnyx.in'
   const pageUrl = `${siteUrl}/blog`
 

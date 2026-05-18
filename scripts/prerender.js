@@ -135,10 +135,17 @@ async function prerenderRoute(browser, route) {
     }
   })
 
+  // Route-specific readiness signal: pick a selector that only renders after
+  // the route's async data (and therefore its <Helmet>) has flushed.
+  let readySelector = 'footer'
+  if (route === '/') readySelector = '.hero-h1'
+  else if (route === '/blog') readySelector = '.blog-list, .blog-page-title'
+  else if (route.startsWith('/blog/')) readySelector = '.blog-post-title'
+  else if (route === '/privacy-policy' || route === '/terms-of-service' || route === '/delete-account') readySelector = '.policy-title'
+
   const target = `${BASE}${route}`
   try {
     await page.goto(target, { waitUntil: 'domcontentloaded', timeout: 25000 })
-    // Wait until React renders something into #root (Suspense resolved).
     await page.waitForFunction(
       () => {
         const root = document.querySelector('#root')
@@ -146,12 +153,31 @@ async function prerenderRoute(browser, route) {
       },
       { timeout: 20000 }
     )
-    await page.waitForSelector('footer', { timeout: 12000 })
-    // Settle for Helmet head sync + async post fetches.
-    await new Promise((r) => setTimeout(r, 1200))
+    await page.waitForSelector(readySelector, { timeout: 15000 })
+    await page.waitForSelector('footer', { timeout: 8000 })
+    // Wait until <title> matches the route (Helmet has flushed) or timeout.
+    await page.waitForFunction(
+      (r) => {
+        const t = document.title || ''
+        if (r === '/') return /fitnyx/i.test(t) && /(coach|planner|fitness)/i.test(t)
+        if (r === '/blog') return /insight|blog/i.test(t)
+        if (r.startsWith('/blog/')) return /insights/i.test(t) && t.length > 30 && !/coach,\s*workout/i.test(t)
+        if (r === '/privacy-policy') return /privacy/i.test(t)
+        if (r === '/terms-of-service') return /terms/i.test(t)
+        if (r === '/delete-account') return /delete/i.test(t)
+        return true
+      },
+      { timeout: 8000 },
+      route,
+    ).catch(() => {})
+    // Final settle for any async meta tag injections.
+    await new Promise((r) => setTimeout(r, 800))
   } catch (e) {
     console.warn(`[prerender] ${route} → soft fail: ${e.message}`)
   }
+
+  // Pull the route-specific title from the live DOM — survives Helmet/document.title quirks.
+  const liveTitle = await page.evaluate(() => document.title)
 
   let html = await page.content()
   await page.close()
@@ -161,12 +187,10 @@ async function prerenderRoute(browser, route) {
 
   // De-duplicate inside <head> — keep the LAST occurrence (Helmet-injected, route-specific).
   html = html.replace(/<head>([\s\S]*?)<\/head>/i, (m, head) => {
-    // <title>
-    const titles = head.match(/<title[^>]*>[\s\S]*?<\/title>/gi) || []
-    if (titles.length > 1) {
-      const last = titles[titles.length - 1]
-      head = head.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '') + last
-    }
+    // <title>: strip all existing, write a single correct one taken from document.title.
+    const safeTitle = liveTitle.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    head = head.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '')
+    head = `<title>${safeTitle}</title>` + head
     // <meta name=…> / <meta property=…> — keep LAST per key.
     const metaRe = /<meta\b[^>]*\/?>/gi
     const metaSeen = new Map()

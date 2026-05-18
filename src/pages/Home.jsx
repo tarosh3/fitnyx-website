@@ -81,6 +81,10 @@ export default function Home({ openPreReg }) {
 
   const siteUrl = 'https://fitnyx.in'
   const homeTitle = 'FitNyx — AI Fitness Coach, Workout & Diet Planner That Remembers You'
+
+  // react-helmet-async v3's title update is unreliable under React 19 +
+  // SPA prerender, so force-set document.title here as a backup.
+  useEffect(() => { document.title = homeTitle }, [homeTitle])
   const homeDesc = 'AI fitness app with context-aware coaching, personalized workout plans, diet planner, and progress tracking for muscle gain & fat loss.'
   const ogImage = `${siteUrl}/og-image.png`
 
