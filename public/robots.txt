@@ -1,0 +1,18 @@
+# https://fitnyx.in robots.txt
+# Allow all reputable crawlers.
+User-agent: *
+Allow: /
+
+# Block junky/aggressive AI scrapers (optional, edit as you wish)
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Disallow non-content artifacts
+Disallow: /assets/*.map$
+Disallow: /3d-models/
+Disallow: /videos/
+
+Sitemap: https://fitnyx.in/sitemap.xml

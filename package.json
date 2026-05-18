@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-sitemap.js",
+    "build": "vite build && node scripts/generate-sitemap.js && node scripts/prerender.js",
+    "build:fast": "vite build && node scripts/generate-sitemap.js",
     "sitemap": "node scripts/generate-sitemap.js",
+    "prerender": "node scripts/prerender.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -26,6 +28,8 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "puppeteer": "^25.0.4",
+    "sirv": "^3.0.2",
     "vite": "^8.0.1"
   }
 }

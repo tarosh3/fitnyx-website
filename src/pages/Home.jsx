@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import Hero from '../components/Hero'
 import Snapshot from '../components/Snapshot'
 import WhySection from '../components/WhySection'
@@ -78,8 +79,79 @@ export default function Home({ openPreReg }) {
     }
   }, [])
 
+  const siteUrl = 'https://fitnyx.in'
+  const homeTitle = 'FitNyx — AI Fitness Coach, Workout & Diet Planner That Remembers You'
+  const homeDesc = 'AI fitness app with context-aware coaching, personalized workout plans, diet planner, and progress tracking. Train smarter for muscle gain, fat loss, and gym performance.'
+  const ogImage = `${siteUrl}/og-image.png`
+
   return (
     <>
+      <Helmet>
+        <title>{homeTitle}</title>
+        <meta name="description" content={homeDesc} />
+        <meta name="keywords" content="AI fitness app, AI workout planner, diet planner, fitness coach app, muscle gain app, fat loss app, gym workout tracker, offline workout tracker, personalized fitness, progress tracker" />
+        <link rel="canonical" href={siteUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={siteUrl} />
+        <meta property="og:title" content={homeTitle} />
+        <meta property="og:description" content={homeDesc} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="FitNyx" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={homeTitle} />
+        <meta name="twitter:description" content={homeDesc} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="theme-color" content="#0d0d15" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'FitNyx',
+          url: siteUrl,
+          logo: `${siteUrl}/favicon.png`,
+          sameAs: [
+            'https://www.instagram.com/fitnyx.in',
+          ],
+          contactPoint: {
+            '@type': 'ContactPoint',
+            email: 'support@fitnyx.in',
+            contactType: 'customer support',
+          },
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: 'FitNyx',
+          applicationCategory: 'HealthApplication',
+          operatingSystem: 'iOS, Android',
+          description: homeDesc,
+          url: siteUrl,
+          image: ogImage,
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'INR',
+            availability: 'https://schema.org/PreOrder',
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'FitNyx',
+            url: siteUrl,
+          },
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'FitNyx',
+          url: siteUrl,
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: `${siteUrl}/blog?q={search_term_string}`,
+            'query-input': 'required name=search_term_string',
+          },
+        })}</script>
+      </Helmet>
       <Hero onPreReg={openPreReg} />
       <Snapshot />
       <WhySection />

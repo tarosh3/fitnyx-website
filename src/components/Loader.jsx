@@ -6,8 +6,10 @@ const MIN_SHOW_MS = 3700
 const FADE_MS = 700
 const FALLBACK_MS = 8000
 
+const IS_PRERENDER = typeof window !== 'undefined' && (window.__PRERENDER__ === true || /[?&]prerender=1\b/.test(window.location.search))
+
 export default function Loader() {
-  const [hidden, setHidden] = useState(false)
+  const [hidden, setHidden] = useState(IS_PRERENDER)
   const [fadeOut, setFadeOut] = useState(false)
   const mountedAt = useRef(Date.now())
   const finishedRef = useRef(false)

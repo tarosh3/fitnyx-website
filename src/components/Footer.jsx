@@ -8,6 +8,15 @@ export default function Footer() {
           <div className="logo">Fit<span style={{ color: 'var(--g)' }}>Nyx</span></div>
           <p>Train with a plan. Eat with purpose. Improve with context. Your AI fitness coach that actually remembers you.</p>
           <a href="#pre-register" className="f-cta">Pre-Register</a>
+          <div className="f-socials" aria-label="Social media">
+            <a href="https://www.instagram.com/fitnyx.in" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="f-social">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+          </div>
         </div>
         <div className="fcols">
           <div className="fc">

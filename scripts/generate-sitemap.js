@@ -61,15 +61,9 @@ ${urls}
 </urlset>
 `
 
-  const robots = `User-agent: *
-Allow: /
-
-Sitemap: ${SITE_URL}/sitemap.xml
-`
-
   mkdirSync(distDir, { recursive: true })
   writeFileSync(resolve(distDir, 'sitemap.xml'), xml)
-  writeFileSync(resolve(distDir, 'robots.txt'), robots)
+  // robots.txt is now a static asset (public/robots.txt) — do not overwrite here.
   console.log(`[sitemap] wrote ${posts.length + staticRoutes.length} urls`)
 }
 

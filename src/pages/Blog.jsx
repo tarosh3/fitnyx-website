@@ -12,14 +12,18 @@ export default function Blog() {
   return (
     <>
       <Helmet>
-        <title>Insights · FitNyx</title>
+        <title>Fitness Insights & Training Science · FitNyx Blog</title>
         <meta name="description" content="Training science, AI coaching, programming, and recovery — written for lifters who want to know what's actually working." />
+        <meta name="keywords" content="fitness blog, workout guides, training science, AI coaching, nutrition, muscle gain, fat loss, recovery, programming" />
         <link rel="canonical" href={pageUrl} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="FitNyx Insights — training science for serious lifters" />
         <meta property="og:description" content="Training science, AI coaching, programming, and recovery." />
         <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={`${siteUrl}/og-image.png`} />
+        <meta property="og:site_name" content="FitNyx" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Blog',

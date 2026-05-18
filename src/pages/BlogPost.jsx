@@ -41,11 +41,17 @@ export default function BlogPost() {
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
         <meta property="og:url" content={url} />
+        <meta property="og:image" content={post.cover || `${siteUrl}/og-image.png`} />
+        <meta property="og:site_name" content="FitNyx" />
         <meta property="article:published_time" content={post.date} />
+        <meta property="article:author" content={post.author?.name || 'FitNyx'} />
         {post.tags.map((t) => (
           <meta property="article:tag" content={t} key={t} />
         ))}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.excerpt} />
+        <meta name="twitter:image" content={post.cover || `${siteUrl}/og-image.png`} />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'BlogPosting',
@@ -53,11 +59,13 @@ export default function BlogPost() {
           description: post.excerpt,
           datePublished: post.date,
           dateModified: post.date,
+          image: post.cover || `${siteUrl}/og-image.png`,
           author: { '@type': 'Person', name: post.author?.name || 'FitNyx' },
           publisher: {
             '@type': 'Organization',
             name: 'FitNyx',
             url: siteUrl,
+            logo: { '@type': 'ImageObject', url: `${siteUrl}/favicon.png` },
           },
           mainEntityOfPage: { '@type': 'WebPage', '@id': url },
           keywords: post.tags.join(', '),
