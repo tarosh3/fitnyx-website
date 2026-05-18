@@ -81,7 +81,7 @@ export default function Home({ openPreReg }) {
 
   const siteUrl = 'https://fitnyx.in'
   const homeTitle = 'FitNyx — AI Fitness Coach, Workout & Diet Planner That Remembers You'
-  const homeDesc = 'AI fitness app with context-aware coaching, personalized workout plans, diet planner, and progress tracking. Train smarter for muscle gain, fat loss, and gym performance.'
+  const homeDesc = 'AI fitness app with context-aware coaching, personalized workout plans, diet planner, and progress tracking for muscle gain & fat loss.'
   const ogImage = `${siteUrl}/og-image.png`
 
   return (
@@ -90,7 +90,7 @@ export default function Home({ openPreReg }) {
         <title>{homeTitle}</title>
         <meta name="description" content={homeDesc} />
         <meta name="keywords" content="AI fitness app, AI workout planner, diet planner, fitness coach app, muscle gain app, fat loss app, gym workout tracker, offline workout tracker, personalized fitness, progress tracker" />
-        <link rel="canonical" href={siteUrl} />
+        <link rel="canonical" href={`${siteUrl}/`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={siteUrl} />
         <meta property="og:title" content={homeTitle} />

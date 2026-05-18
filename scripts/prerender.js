@@ -159,31 +159,51 @@ async function prerenderRoute(browser, route) {
   // Strip dev-only inline scripts / leftover hash mismatches. Keep <head>+<body>.
   html = html.replace(/<script[^>]+vite[^>]*><\/script>/g, '')
 
-  // De-duplicate <title> tags inside <head> — keep the LAST one (Helmet-injected, route-specific).
+  // De-duplicate inside <head> — keep the LAST occurrence (Helmet-injected, route-specific).
   html = html.replace(/<head>([\s\S]*?)<\/head>/i, (m, head) => {
+    // <title>
     const titles = head.match(/<title[^>]*>[\s\S]*?<\/title>/gi) || []
     if (titles.length > 1) {
       const last = titles[titles.length - 1]
-      const stripped = head.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '')
-      head = stripped + last
+      head = head.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '') + last
     }
-    // Collapse duplicate name=/property= meta tags — keep the LAST occurrence.
-    const seen = new Map()
+    // <meta name=…> / <meta property=…> — keep LAST per key.
     const metaRe = /<meta\b[^>]*\/?>/gi
-    const metas = head.match(metaRe) || []
-    metas.forEach((tag, i) => {
-      const keyMatch = tag.match(/\s(?:name|property)=["']([^"']+)["']/i)
-      if (!keyMatch) return
-      const key = keyMatch[1].toLowerCase()
-      seen.set(key, { tag, i })
+    const metaSeen = new Map()
+    ;(head.match(metaRe) || []).forEach((tag, i) => {
+      const k = tag.match(/\s(?:name|property)=["']([^"']+)["']/i)
+      if (k) metaSeen.set(k[1].toLowerCase(), i)
     })
-    let idx = 0
+    let mi = 0
     head = head.replace(metaRe, (tag) => {
-      const keyMatch = tag.match(/\s(?:name|property)=["']([^"']+)["']/i)
-      const cur = idx++
-      if (!keyMatch) return tag
-      const winner = seen.get(keyMatch[1].toLowerCase())
-      return winner && winner.i === cur ? tag : ''
+      const cur = mi++
+      const k = tag.match(/\s(?:name|property)=["']([^"']+)["']/i)
+      if (!k) return tag
+      return metaSeen.get(k[1].toLowerCase()) === cur ? tag : ''
+    })
+    // <link rel=canonical|alternate|…> — keep LAST per rel-value combo.
+    const linkRe = /<link\b[^>]*\/?>/gi
+    const linkSeen = new Map()
+    ;(head.match(linkRe) || []).forEach((tag, i) => {
+      const rel = tag.match(/\srel=["']([^"']+)["']/i)
+      if (!rel) return
+      const dedupeRels = ['canonical', 'alternate', 'manifest', 'author', 'me']
+      if (!dedupeRels.includes(rel[1].toLowerCase())) return
+      // For alternate, also key by hreflang so different langs survive.
+      const hreflang = tag.match(/\shreflang=["']([^"']+)["']/i)
+      const key = rel[1].toLowerCase() + (hreflang ? `:${hreflang[1].toLowerCase()}` : '')
+      linkSeen.set(key, i)
+    })
+    let li = 0
+    head = head.replace(linkRe, (tag) => {
+      const cur = li++
+      const rel = tag.match(/\srel=["']([^"']+)["']/i)
+      if (!rel) return tag
+      const dedupeRels = ['canonical', 'alternate', 'manifest', 'author', 'me']
+      if (!dedupeRels.includes(rel[1].toLowerCase())) return tag
+      const hreflang = tag.match(/\shreflang=["']([^"']+)["']/i)
+      const key = rel[1].toLowerCase() + (hreflang ? `:${hreflang[1].toLowerCase()}` : '')
+      return linkSeen.get(key) === cur ? tag : ''
     })
     return `<head>${head}</head>`
   })
