@@ -35,6 +35,7 @@ const staticRoutes = [
   { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
   { path: '/terms-of-service', priority: '0.3', changefreq: 'yearly' },
   { path: '/delete-account', priority: '0.3', changefreq: 'yearly' },
+  { path: '/help', priority: '0.5', changefreq: 'monthly' },
 ]
 
 function urlEntry({ loc, lastmod, changefreq, priority }) {

@@ -1031,6 +1031,7 @@ footer{background:var(--su);border-top:1px solid var(--bd);padding:56px 56px 34p
   font-size:13px;font-weight:600;color:#0b0b10;background:var(--g);
   text-decoration:none;transition:transform var(--dur-normal),box-shadow var(--dur-normal);
   box-shadow:0 8px 24px rgba(97,200,148,.22);
+  border:none;cursor:pointer;font-family:inherit;
 }
 .f-cta:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(97,200,148,.32)}
 .f-socials{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}

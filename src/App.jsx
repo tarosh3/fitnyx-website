@@ -10,6 +10,8 @@ import PolicyPage from './pages/PolicyPage'
 const Home = lazy(() => import('./pages/Home'))
 const Blog = lazy(() => import('./pages/Blog'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
+const Help = lazy(() => import('./pages/Help'))
+const EmailConfirmed = lazy(() => import('./pages/EmailConfirmed'))
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -34,9 +36,11 @@ export default function App() {
         <Route path="/" element={<Home openPreReg={openPreReg} />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/email-confirmed" element={<EmailConfirmed />} />
         
         <Route path="/privacy-policy" element={
-          <PolicyPage title="Privacy Policy" lastUpdated="February 16, 2026">
+          <PolicyPage title="Privacy Policy" lastUpdated="October 11, 2026">
             <h2>1. Introduction</h2>
             <p>Welcome to FitNyx ("we", "our", or "us"). This Privacy Policy explains how we collect, use, disclose, and protect your information when you use our website and services. By using FitNyx, you agree to the practices described in this Privacy Policy.</p>
             
@@ -49,6 +53,9 @@ export default function App() {
             
             <h3>C. AI Interaction Data</h3>
             <p>When you use the AI Coach: Messages you send, AI responses, and Context generated from your fitness profile and logs.</p>
+
+            <h3>D. Location Data (Roam)</h3>
+            <p>Only when you start a Roam (a GPS-tracked run, walk or ride), the app records your location to draw your route and calculate distance, pace and speed — including while the screen is locked, until you finish or pause. Location is never collected at any other time, and we only request “while using the app” permission. Saved routes are stored with your account, used for your stats and AI coaching, and deleted when you delete the Roam or your account.</p>
             
             <h2>3. How We Use Your Information</h2>
             <p>We use your information to provide and improve FitNyx services, personalize workout recommendations, generate AI-based fitness insights, and comply with legal obligations. We do not sell your personal data to third parties.</p>
@@ -85,12 +92,17 @@ export default function App() {
             <p>FitNyx respects your privacy and your right to control your data. If you wish to delete your FitNyx account and all associated data, you can do so using the methods described below.</p>
             
             <div className="option-box">
-              <h3>Option 1: Remove FitNyx from Facebook</h3>
+              <h3>Option 1: Delete in the app</h3>
+              <p>Open FitNyx → <strong>Settings → Delete Account</strong>. Your account is scheduled for deletion and permanently erased after 30 days; logging back in within that window cancels it.</p>
+            </div>
+
+            <div className="option-box">
+              <h3>Option 2: Remove FitNyx from Facebook</h3>
               <p>If you signed up via Facebook, you can revoke access directly through Facebook Settings & Privacy → Apps and Websites. Find FitNyx and click Remove.</p>
             </div>
 
             <div className="option-box">
-              <h3>Option 2: Request Manual Deletion</h3>
+              <h3>Option 3: Request Manual Deletion</h3>
               <p>To permanently delete your FitNyx account and all associated fitness data from our database, send us an email at <strong>support@fitnyx.in</strong>.</p>
               <p>Please include the email address associated with your FitNyx account. We will process your deletion within 30 days and confirm via email once complete.</p>
             </div>
@@ -101,13 +113,14 @@ export default function App() {
               <li>Workout plans and exercise logs</li>
               <li>Session history and progress data</li>
               <li>AI Coach conversation history</li>
+              <li>Roam routes (GPS tracks) and activity history</li>
             </ul>
           </PolicyPage>
         } />
       </Routes>
       </Suspense>
 
-      <Footer />
+      <Footer onPreReg={openPreReg} />
     </HelmetProvider>
   )
 }
