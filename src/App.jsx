@@ -11,6 +11,7 @@ const Home = lazy(() => import('./pages/Home'))
 const Blog = lazy(() => import('./pages/Blog'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
 const Help = lazy(() => import('./pages/Help'))
+const EmailConfirmed = lazy(() => import('./pages/EmailConfirmed'))
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/email-confirmed" element={<EmailConfirmed />} />
         
         <Route path="/privacy-policy" element={
           <PolicyPage title="Privacy Policy" lastUpdated="October 11, 2026">

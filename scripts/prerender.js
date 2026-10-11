@@ -55,6 +55,7 @@ const STATIC_ROUTES = [
   '/terms-of-service',
   '/delete-account',
   '/help',
+  '/email-confirmed',
 ]
 
 async function loadBlogSlugs() {
@@ -142,7 +143,7 @@ async function prerenderRoute(browser, route) {
   if (route === '/') readySelector = '.hero-h1'
   else if (route === '/blog') readySelector = '.blog-list, .blog-page-title'
   else if (route.startsWith('/blog/')) readySelector = '.blog-post-title'
-  else if (route === '/privacy-policy' || route === '/terms-of-service' || route === '/delete-account' || route === '/help') readySelector = '.policy-title'
+  else if (route === '/privacy-policy' || route === '/terms-of-service' || route === '/delete-account' || route === '/help' || route === '/email-confirmed') readySelector = '.policy-title'
 
   const target = `${BASE}${route}`
   try {
