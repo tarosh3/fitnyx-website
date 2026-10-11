@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet-async'
 // so handing off to the app is the "close" on mobile.
 
 const APP_SCHEME = 'fitnyxmobile://auth/callback'
+const LINK = { color: 'var(--g)', textDecoration: 'none', fontWeight: 600 }
 
 function readParams() {
   const query = new URLSearchParams(window.location.search)
@@ -34,6 +35,30 @@ function initialState() {
   }
 }
 
+// Mail-with-check / mail-with-x line icon in a tinted halo (matches the app).
+function StatusIcon({ failed }) {
+  const color = failed ? '#ef4444' : 'var(--g)'
+  return (
+    <div aria-hidden="true" style={{
+      width: 112, height: 112, borderRadius: '50%', margin: '0 auto 28px', display: 'flex',
+      alignItems: 'center', justifyContent: 'center',
+      background: failed ? 'rgba(239,68,68,.06)' : 'rgba(97,200,148,.06)',
+      border: `1px solid ${failed ? 'rgba(239,68,68,.16)' : 'rgba(97,200,148,.16)'}`,
+    }}>
+      <div style={{
+        width: 76, height: 76, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: failed ? 'rgba(239,68,68,.12)' : 'rgba(97,200,148,.12)',
+      }}>
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+          {failed ? <><path d="m17 17 4 4" /><path d="m21 17-4 4" /></> : <path d="m16 19 2 2 4-4" />}
+        </svg>
+      </div>
+    </div>
+  )
+}
+
 export default function EmailConfirmed() {
   const [state] = useState(initialState)
 
@@ -56,7 +81,7 @@ export default function EmailConfirmed() {
       <div className="policy-page rv in">
         <div className="si-inner">
           <div className="policy-container" style={{ textAlign: 'center', maxWidth: 560, margin: '0 auto' }}>
-            <div style={{ fontSize: 56, lineHeight: 1, marginBottom: 18 }} aria-hidden="true">{failed ? '⏳' : '✅'}</div>
+            <StatusIcon failed={failed} />
             <h1 className="policy-title">{failed ? 'This link has expired' : 'Email confirmed'}</h1>
 
             <div className="policy-content">
@@ -83,7 +108,7 @@ export default function EmailConfirmed() {
               )}
 
               <p style={{ marginTop: 28, fontSize: 14 }}>
-                Need help? <Link to="/help">Help &amp; FAQ</Link> · <a href="mailto:support@fitnyx.in">support@fitnyx.in</a>
+                Need help? <Link to="/help" style={LINK}>Help &amp; FAQ</Link> · <a href="mailto:support@fitnyx.in" style={LINK}>support@fitnyx.in</a>
               </p>
             </div>
           </div>
