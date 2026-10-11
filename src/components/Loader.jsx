@@ -8,14 +8,21 @@ const FALLBACK_MS = 8000
 
 const IS_PRERENDER = typeof window !== 'undefined' && (window.__PRERENDER__ === true || /[?&]prerender=1\b/.test(window.location.search))
 
+// The loader waits for the homepage's 3D scene. Other pages (blog, help,
+// privacy, delete-account) have no scene, so it never got "done" and sat on
+// the 8 s fallback — ~9 s of logo with scrolling locked. Only the homepage
+// shows it; landing anywhere else renders immediately.
+const STARTS_ON_HOME = typeof window === 'undefined' || window.location.pathname === '/'
+
 export default function Loader() {
-  const [hidden, setHidden] = useState(IS_PRERENDER)
+  const [hidden, setHidden] = useState(IS_PRERENDER || !STARTS_ON_HOME)
   const [fadeOut, setFadeOut] = useState(false)
-  const mountedAt = useRef(Date.now())
+  const mountedAt = useRef(0)
   const finishedRef = useRef(false)
   const animRef = useRef(null)
 
   useLayoutEffect(() => {
+    mountedAt.current = Date.now()
     let raf1 = 0, raf2 = 0, t = 0
     raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => {

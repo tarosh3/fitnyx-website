@@ -54,6 +54,7 @@ const STATIC_ROUTES = [
   '/privacy-policy',
   '/terms-of-service',
   '/delete-account',
+  '/help',
 ]
 
 async function loadBlogSlugs() {
@@ -141,7 +142,7 @@ async function prerenderRoute(browser, route) {
   if (route === '/') readySelector = '.hero-h1'
   else if (route === '/blog') readySelector = '.blog-list, .blog-page-title'
   else if (route.startsWith('/blog/')) readySelector = '.blog-post-title'
-  else if (route === '/privacy-policy' || route === '/terms-of-service' || route === '/delete-account') readySelector = '.policy-title'
+  else if (route === '/privacy-policy' || route === '/terms-of-service' || route === '/delete-account' || route === '/help') readySelector = '.policy-title'
 
   const target = `${BASE}${route}`
   try {
@@ -165,6 +166,7 @@ async function prerenderRoute(browser, route) {
         if (r === '/privacy-policy') return /privacy/i.test(t)
         if (r === '/terms-of-service') return /terms/i.test(t)
         if (r === '/delete-account') return /delete/i.test(t)
+        if (r === '/help') return /help/i.test(t)
         return true
       },
       { timeout: 8000 },
