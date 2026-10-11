@@ -51,13 +51,23 @@ export default function PreRegModal({ isOpen, onClose }) {
         body: JSON.stringify({ email: email.trim(), website }),
       })
       const data = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        throw new Error(data?.error || 'Something went wrong. Try again.')
+      if (res.status === 400) {
+        throw new Error(data?.error || 'Please enter a valid email.')
       }
+      if (!res.ok) throw new Error('unavailable')
       setStatus('success')
     } catch (err) {
-      setStatus('error')
-      setErrorMsg(err.message || 'Network error. Try again.')
+      if (err.message !== 'unavailable' && !(err instanceof TypeError)) {
+        setStatus('error')
+        setErrorMsg(err.message)
+        return
+      }
+      // Signup API not reachable/configured (no endpoint, missing keys,
+      // network): never lose the signup — fall back to emailing support.
+      const subject = encodeURIComponent('FitNyx Pre-Registration')
+      const body = encodeURIComponent(`Hi FitNyx team,\n\nPlease add me to early access.\n\nEmail: ${email.trim()}\n\nThanks`)
+      window.open(`mailto:support@fitnyx.in?subject=${subject}&body=${body}`, '_self')
+      setStatus('success')
     }
   }
 
